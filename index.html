@@ -99,7 +99,7 @@
               >
                 <span class="nav-dropdown-label">Select App Policy</span>
                 <a
-                  href="#noteapt-privacy"
+                  href="#noteapt"
                   data-policy="noteapt"
                   class="nav-dropdown-item"
                   role="menuitem"
@@ -113,8 +113,8 @@
                 <!--
                 Future app dropdown item example (e.g. Music Player):
                 <a
-                  href="#music-player-privacy"
-                  data-policy="music-player"
+                  href="#musicplayer"
+                  data-policy="musicplayer"
                   class="nav-dropdown-item"
                   role="menuitem"
                 >
@@ -238,7 +238,7 @@
                   />
                 </svg>
               </a>
-              <a href="#noteapt-privacy" class="btn btn-outline"
+              <a href="#noteapt" class="btn btn-outline"
                 >NoteApt Privacy Policy</a
               >
             </div>
@@ -416,9 +416,7 @@
               <div class="card-actions">
                 <!-- TODO: replace href="#" with the real Google Play Store URL once published -->
                 <a href="#" class="btn btn-primary">Google Play</a>
-                <a href="#noteapt-privacy" class="btn btn-outline"
-                  >Privacy Policy</a
-                >
+                <a href="#noteapt" class="btn btn-outline">Privacy Policy</a>
               </div>
             </article>
 
@@ -439,7 +437,7 @@
               </ul>
               <div class="card-actions">
                 <a href="#" class="btn btn-primary">Download</a>
-                <a href="#music-player-privacy" class="btn btn-outline">Privacy Policy</a>
+                <a href="#musicplayer" class="btn btn-outline">Privacy Policy</a>
               </div>
             </article>
             -->
@@ -470,18 +468,18 @@
               aria-label="App policy selector"
             >
               <a
-                href="#noteapt-privacy"
+                href="#noteapt"
                 data-policy="noteapt"
                 class="policy-pill active"
                 >NoteApt</a
               >
-              <!-- Future app pill: <a href="#music-player-privacy" data-policy="music-player" class="policy-pill">Music Player</a> -->
+              <!-- Future app pill: <a href="#musicplayer" data-policy="musicplayer" class="policy-pill">Music Player</a> -->
             </div>
           </header>
 
           <!-- NOTEAPT POLICY -->
           <article
-            id="noteapt-privacy"
+            id="noteapt"
             data-policy-section="noteapt"
             class="policy-document"
           >
@@ -692,8 +690,8 @@
           <!--
           Future app policy template (e.g. Music Player):
           <article
-            id="music-player-privacy"
-            data-policy-section="music-player"
+            id="musicplayer"
+            data-policy-section="musicplayer"
             class="policy-document"
           >
             ...
@@ -782,7 +780,7 @@
         <ul class="footer-links">
           <li><a href="#home">Home</a></li>
           <li><a href="#apps">Apps</a></li>
-          <li><a href="#noteapt-privacy">NoteApt Policy</a></li>
+          <li><a href="#noteapt">NoteApt Policy</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
         <p class="footer-copy">© 2026 LotOfApps. All rights reserved.</p>
@@ -797,6 +795,26 @@
           window.location.pathname + window.location.search,
         );
       }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        var policyItems = document.querySelectorAll(
+          '.nav-dropdown-item[data-policy]',
+        );
+        function syncActivePolicyItem() {
+          var currentHash = window.location.hash.replace(/^#/, '');
+          policyItems.forEach(function (item) {
+            var isSelected = item.getAttribute('data-policy') === currentHash;
+            item.classList.toggle('is-active', isSelected);
+            if (isSelected) {
+              item.setAttribute('aria-current', 'true');
+            } else {
+              item.removeAttribute('aria-current');
+            }
+          });
+        }
+        syncActivePolicyItem();
+        window.addEventListener('hashchange', syncActivePolicyItem);
+      });
     </script>
     <script src="script.js"></script>
   </body>

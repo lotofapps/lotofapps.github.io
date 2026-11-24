@@ -4,14 +4,12 @@
    - Hash-based deep linking:
        #home        -> Home tab
        #apps        -> Apps tab
-       #policies    -> Policies tab, show NoteApt policy (default app)
+       #policies    -> Policies tab (shows default/first policy)
+       #noteapt     -> Policies tab, show NoteApt policy (keeps #noteapt in URL)
+       #musicplayer -> Policies tab, show Music Player policy (keeps #musicplayer in URL)
        #contact     -> Contact tab
-       #noteapt-privacy -> alias for #policies (normalized to #policies)
    - Theme toggle persisted in localStorage
    - Accessible mobile hamburger menu
-   - Header dropdown for Policies is CSS-first (:hover/:focus-within).
-     No JS navigation logic for dropdown items — they are plain anchors
-     handled by the same hash router as every other nav link.
    ========================================================================== */
 
 (function () {
@@ -23,15 +21,19 @@
   // Hash-to-route map.
   // Each entry: { tab, policy, normalize }
   //   tab      : which tab to activate (always 'policies' for policy hashes)
-  //   policy   : app slug whose policy section to show (matches data-policy)
-  //   normalize: if set, rewrite location.hash to this value on load/click
-  //              (e.g. '#noteapt-privacy' normalizes to '#policies')
-  //
-  // To wire up a future app policy, add an entry like:
-  //   '<slug>-privacy': { tab: 'policies', policy: '<slug>', normalize: 'policies' },
+  //   policy   : app slug whose policy section to show (matches data-policy / id)
+  //   normalize: null so #noteapt and #musicplayer stay in the URL hash
   var ROUTES = {
-    'policies': { tab: 'policies', policy: 'noteapt', normalize: null },
-    'noteapt-privacy': { tab: 'policies', policy: 'noteapt', normalize: 'policies' },
+    policies: { tab: 'policies', policy: 'noteapt', normalize: null },
+    noteapt: { tab: 'policies', policy: 'noteapt', normalize: null },
+    musicplayer: { tab: 'policies', policy: 'musicplayer', normalize: null },
+    // Backward-compatible aliases without forcing #policies
+    'noteapt-privacy': { tab: 'policies', policy: 'noteapt', normalize: null },
+    'music-player-privacy': {
+      tab: 'policies',
+      policy: 'musicplayer',
+      normalize: null,
+    },
   };
 
   var doc = document;
@@ -45,7 +47,9 @@
   var THEME_KEY = 'lotofapps_theme';
 
   function systemTheme() {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
   }
 
   function applyTheme(theme) {
@@ -54,9 +58,14 @@
     } else {
       delete htmlEl.dataset.theme;
     }
-    themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    if (themeToggle) {
+      themeToggle.setAttribute(
+        'aria-label',
+        theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
+      );
+    }
     if (metaTheme) {
-      metaTheme.content = theme === 'dark' ? '#0b1020' : '#ffffff';
+      metaTheme.content = theme === 'dark' ? '#090d16' : '#ffffff';
     }
   }
 
@@ -65,20 +74,70 @@
     applyTheme(stored ? stored : systemTheme());
   }
 
-  themeToggle.addEventListener('click', function () {
-    var current = htmlEl.dataset.theme === 'dark' ? 'dark' : 'light';
-    var next = current === 'dark' ? 'light' : 'dark';
-    localStorage.setItem(THEME_KEY, next);
-    applyTheme(next);
-  });
-
-  /* ---------- tabs ---------- */
-  function hideMobileMenu() {
-    navToggle.setAttribute('aria-expanded', 'false');
-    siteNav.removeAttribute('data-open');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function () {
+      var current = htmlEl.dataset.theme === 'dark' ? 'dark' : 'light';
+      var next = current === 'dark' ? 'light' : 'dark';
+      localStorage.setItem(THEME_KEY, next);
+      applyTheme(next);
+    });
   }
 
-  function activateTab(id) {
+  /* ---------- policy selection & tabs ---------- */
+  function syncPolicyActiveStates(policySlug) {
+    doc
+      .querySelectorAll('.nav-dropdown-item[data-policy]')
+      .forEach(function (item) {
+        var matched = item.getAttribute('data-policy') === policySlug;
+        item.classList.toggle('is-active', matched);
+        if (matched) {
+          item.setAttribute('aria-current', 'true');
+        } else {
+          item.removeAttribute('aria-current');
+        }
+      });
+
+    doc.querySelectorAll('.policy-pill[data-policy]').forEach(function (pill) {
+      pill.classList.toggle(
+        'active',
+        pill.getAttribute('data-policy') === policySlug,
+      );
+    });
+  }
+
+  function showPolicySection(policySlug) {
+    var sections = doc.querySelectorAll('.policy-document');
+    var targetSection = null;
+
+    sections.forEach(function (sec) {
+      var slug = sec.getAttribute('data-policy-section') || sec.id;
+      var isMatch = slug === policySlug;
+      sec.hidden = !isMatch;
+      if (isMatch) {
+        targetSection = sec;
+      }
+    });
+
+    // Fallback to first policy section if slug is not in DOM yet
+    if (!targetSection && sections.length > 0) {
+      sections[0].hidden = false;
+      targetSection = sections[0];
+    }
+
+    syncPolicyActiveStates(policySlug);
+    return targetSection;
+  }
+
+  function hideMobileMenu() {
+    if (navToggle) {
+      navToggle.setAttribute('aria-expanded', 'false');
+    }
+    if (siteNav) {
+      siteNav.removeAttribute('data-open');
+    }
+  }
+
+  function activateTab(id, policySlug) {
     if (TABS.indexOf(id) === -1) {
       id = 'home';
     }
@@ -96,14 +155,17 @@
     });
 
     if (id === 'policies') {
-      scrollToPolicy();
+      var activePolicy = policySlug || 'noteapt';
+      var sec = showPolicySection(activePolicy);
+      scrollToElement(sec);
+    } else {
+      syncPolicyActiveStates('');
     }
 
     hideMobileMenu();
   }
 
-  function scrollToPolicy() {
-    var el = doc.getElementById('noteapt-privacy');
+  function scrollToElement(el) {
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -117,21 +179,20 @@
   }
 
   function onHashChange() {
-    var hash = location.hash.slice(1);
+    var hash = location.hash.replace(/^#/, '');
     var route = ROUTES[hash];
 
     if (route) {
-      // Policy anchor (e.g. #policies or #noteapt-privacy alias)
       if (route.normalize && location.hash !== '#' + route.normalize) {
         location.hash = '#' + route.normalize;
         return;
       }
-      activateTab(route.tab);
+      activateTab(route.tab, route.policy);
       return;
     }
 
     if (TABS.indexOf(hash) !== -1) {
-      activateTab(hash || 'home');
+      activateTab(hash);
       return;
     }
 
@@ -141,42 +202,42 @@
   /* ---------- anchor delegation (in-page links) ---------- */
   doc.addEventListener('click', function (e) {
     var link = e.target.closest('a[href^="#"]');
-    if (link) {
-      var href = link.getAttribute('href');
-      var hash = href.slice(1);
+    if (!link) {
+      return;
+    }
 
-      if (hash === '') {
-        // Placeholder link (e.g. "Get it on Google Play" before a real URL is added)
-        e.preventDefault();
-        return;
-      }
+    var href = link.getAttribute('href');
+    var hash = href.slice(1);
 
-      var route = ROUTES[hash];
-      if (route) {
-        e.preventDefault();
-        activateTab(route.tab);
-        if (route.normalize && location.hash !== '#' + route.normalize) {
-          location.hash = '#' + route.normalize;
-        } else {
-          setHash(hash);
-        }
-        return;
-      }
+    if (hash === '') {
+      // Placeholder link (e.g. Google Play / Download before a real URL is added)
+      e.preventDefault();
+      return;
+    }
 
-      if (TABS.indexOf(hash) !== -1) {
-        e.preventDefault();
-        location.hash = hash;
-        return;
-      }
+    var route = ROUTES[hash];
+    if (route) {
+      e.preventDefault();
+      setHash(hash);
+      activateTab(route.tab, route.policy);
+      return;
+    }
+
+    if (TABS.indexOf(hash) !== -1) {
+      e.preventDefault();
+      setHash(hash);
+      activateTab(hash);
     }
   });
 
   /* ---------- mobile menu ---------- */
-  navToggle.addEventListener('click', function () {
-    var open = navToggle.getAttribute('aria-expanded') === 'true';
-    navToggle.setAttribute('aria-expanded', String(!open));
-    siteNav.setAttribute('data-open', String(!open));
-  });
+  if (navToggle && siteNav) {
+    navToggle.addEventListener('click', function () {
+      var open = navToggle.getAttribute('aria-expanded') === 'true';
+      navToggle.setAttribute('aria-expanded', String(!open));
+      siteNav.setAttribute('data-open', String(!open));
+    });
+  }
 
   doc.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
