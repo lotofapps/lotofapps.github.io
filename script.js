@@ -4,12 +4,12 @@
    - Hash-based deep linking:
        #home        -> Home tab
        #apps        -> Apps tab
-       #policies    -> Policies tab, expand NoteApt group, show NoteApt policy
+       #policies    -> Policies tab, show NoteApt policy (default app)
        #contact     -> Contact tab
        #noteapt-privacy -> alias for #policies (normalized to #policies)
    - Theme toggle persisted in localStorage
    - Accessible mobile hamburger menu
-   - Collapsible app submenu groups inside the Policies tab
+   - Header dropdown for Policies (desktop hover/focus, mobile accordion)
    ========================================================================== */
 
 (function () {
@@ -25,7 +25,7 @@
   //   normalize: if set, rewrite location.hash to this value on load/click
   //              (e.g. '#noteapt-privacy' normalizes to '#policies')
   //
-  // To wire up a future app, add an entry like:
+  // To wire up a future app policy, add an entry like:
   //   '<slug>-privacy': { tab: 'policies', policy: '<slug>', normalize: 'policies' },
   var ROUTES = {
     'policies': { tab: 'policies', policy: 'noteapt', normalize: null },
@@ -41,6 +41,11 @@
   var navToggle = doc.getElementById('nav-toggle');
   var siteNav = doc.getElementById('site-nav');
   var themeToggle = doc.getElementById('theme-toggle');
+
+  // Header dropdown elements
+  var policiesTrigger = doc.getElementById('policies-trigger');
+  var policiesDropdown = doc.getElementById('policies-dropdown');
+  var dropdownCloseTimer = null;
 
   /* ---------- theme ---------- */
   var THEME_KEY = 'lotofapps_theme';
@@ -96,18 +101,21 @@
       }
     });
 
+    // Policies trigger is a button, not a link — sync its aria-current separately
+    if (policiesTrigger) {
+      if (id === 'policies') {
+        policiesTrigger.setAttribute('aria-current', 'page');
+      } else {
+        policiesTrigger.removeAttribute('aria-current');
+      }
+    }
+
     if (id === 'policies') {
-      showDefaultPolicy();
+      scrollToPolicy();
     }
 
     hideMobileMenu();
-  }
-
-  function showDefaultPolicy() {
-    // Expand the default app group (NoteApt) and scroll to its policy section.
-    expandGroup(DEFAULT_POLICY_APP, true);
-    setActivePolicy(DEFAULT_POLICY_APP);
-    scrollToPolicy();
+    closeDropdown();
   }
 
   function scrollToPolicy() {
@@ -117,51 +125,121 @@
     }
   }
 
-  /* ---------- collapsible submenu groups ---------- */
-  function groupHeaderId(appSlug) {
-    return 'group-' + appSlug + '-header';
+  /* ---------- header dropdown ---------- */
+  function isMobileView() {
+    return navToggle && getComputedStyle(navToggle).display !== 'none';
   }
 
-  function groupItemsId(appSlug) {
-    return 'group-' + appSlug + '-items';
-  }
-
-  function expandGroup(appSlug, expand) {
-    var header = doc.getElementById(groupHeaderId(appSlug));
-    var items = doc.getElementById(groupItemsId(appSlug));
-    if (!header || !items) {
+  function openDropdown() {
+    if (!policiesTrigger || !policiesDropdown) {
       return;
     }
-    var currentlyExpanded = header.getAttribute('aria-expanded') === 'true';
-    if (expand === currentlyExpanded) {
+    policiesTrigger.setAttribute('aria-expanded', 'true');
+    policiesDropdown.removeAttribute('hidden');
+    if (dropdownCloseTimer) {
+      clearTimeout(dropdownCloseTimer);
+      dropdownCloseTimer = null;
+    }
+  }
+
+  function closeDropdown() {
+    if (!policiesTrigger || !policiesDropdown) {
       return;
     }
-    header.setAttribute('aria-expanded', String(expand));
-    if (expand) {
-      items.removeAttribute('hidden');
-    } else {
-      items.setAttribute('hidden', '');
+    policiesTrigger.setAttribute('aria-expanded', 'false');
+    policiesDropdown.setAttribute('hidden', '');
+  }
+
+  function scheduleClose() {
+    dropdownCloseTimer = setTimeout(closeDropdown, 150);
+  }
+
+  function cancelClose() {
+    if (dropdownCloseTimer) {
+      clearTimeout(dropdownCloseTimer);
+      dropdownCloseTimer = null;
     }
   }
 
-  function toggleGroup(appSlug) {
-    var header = doc.getElementById(groupHeaderId(appSlug));
-    var expanded = header ? header.getAttribute('aria-expanded') === 'true' : false;
-    expandGroup(appSlug, !expanded);
-    // Always keep/activate Policies tab, set canonical hash, and scroll to policy.
-    activateTab('policies');
-    setHash('policies');
-    scrollToPolicy();
-  }
+  // Desktop hover with ~150ms close grace period
+  if (policiesTrigger && policiesDropdown) {
+    policiesTrigger.addEventListener('mouseenter', function () {
+      cancelClose();
+      openDropdown();
+    });
+    policiesTrigger.addEventListener('mouseleave', function () {
+      scheduleClose();
+    });
+    policiesDropdown.addEventListener('mouseenter', function () {
+      cancelClose();
+    });
+    policiesDropdown.addEventListener('mouseleave', function () {
+      scheduleClose();
+    });
 
-  function setActivePolicy(slug) {
-    doc.querySelectorAll('.policy-submenu-items a[data-policy]').forEach(function (item) {
-      if (item.dataset.policy === slug) {
-        item.setAttribute('aria-current', 'true');
-      } else {
-        item.removeAttribute('aria-current');
+    // Keyboard: Enter/Space navigates to #policies; ArrowDown opens dropdown + focuses first item
+    policiesTrigger.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (isMobileView()) {
+          toggleMobilePolicies();
+        } else {
+          activateTab('policies');
+          setHash('policies');
+        }
+        closeDropdown();
+        return;
+      }
+      if (e.key === 'ArrowDown' && !isMobileView()) {
+        e.preventDefault();
+        openDropdown();
+        var firstItem = policiesDropdown.querySelector('a');
+        if (firstItem) {
+          firstItem.focus();
+        }
       }
     });
+
+    // Keyboard nav within dropdown items
+    policiesDropdown.addEventListener('keydown', function (e) {
+      var items = Array.from(policiesDropdown.querySelectorAll('a'));
+      var index = items.indexOf(e.target);
+      if (index === -1) {
+        return;
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        var next = items[(index + 1) % items.length];
+        if (next) {
+          next.focus();
+        }
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        var prev = items[(index - 1 + items.length) % items.length];
+        if (prev) {
+          prev.focus();
+        }
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeDropdown();
+        policiesTrigger.focus();
+      }
+    });
+  }
+
+  // Mobile accordion for Policies row
+  function toggleMobilePolicies() {
+    if (!policiesTrigger || !policiesDropdown) {
+      return;
+    }
+    var expanded = policiesTrigger.getAttribute('aria-expanded') === 'true';
+    if (expanded) {
+      closeDropdown();
+    } else {
+      openDropdown();
+    }
   }
 
   /* ---------- hash helpers ---------- */
@@ -182,18 +260,19 @@
         return;
       }
       activateTab(route.tab);
-      expandGroup(route.policy, true);
-      setActivePolicy(route.policy);
+      closeDropdown();
       scrollToPolicy();
       return;
     }
 
     if (TABS.indexOf(hash) !== -1) {
       activateTab(hash || 'home');
+      closeDropdown();
       return;
     }
 
     activateTab('home');
+    closeDropdown();
   }
 
   /* ---------- anchor delegation (in-page links) ---------- */
@@ -213,8 +292,7 @@
       if (route) {
         e.preventDefault();
         activateTab(route.tab);
-        expandGroup(route.policy, true);
-        setActivePolicy(route.policy);
+        closeDropdown();
         scrollToPolicy();
         if (route.normalize && location.hash !== '#' + route.normalize) {
           location.hash = '#' + route.normalize;
@@ -231,13 +309,23 @@
       }
     }
 
-    // Collapsible submenu group header button click
-    var button = e.target.closest('button.policy-group-header');
-    if (button) {
-      var appSlug = button.id.replace('group-', '').replace('-header', '');
+    // Policies trigger click
+    var trigger = e.target.closest('#policies-trigger, .nav-dropdown-trigger');
+    if (trigger) {
       e.preventDefault();
-      toggleGroup(appSlug);
+      if (isMobileView()) {
+        toggleMobilePolicies();
+      } else {
+        activateTab('policies');
+        setHash('policies');
+      }
       return;
+    }
+
+    // Outside click closes dropdown and mobile menu
+    if (!siteNav.contains(e.target)) {
+      closeDropdown();
+      hideMobileMenu();
     }
   });
 
@@ -246,11 +334,13 @@
     var open = navToggle.getAttribute('aria-expanded') === 'true';
     navToggle.setAttribute('aria-expanded', String(!open));
     siteNav.setAttribute('data-open', String(!open));
+    closeDropdown();
   });
 
   doc.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       hideMobileMenu();
+      closeDropdown();
     }
   });
 

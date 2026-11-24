@@ -47,7 +47,23 @@
         <ul>
           <li><a href="#home" data-tab="home" aria-current="page">Home</a></li>
           <li><a href="#apps" data-tab="apps">Apps</a></li>
-          <li><a href="#policies" data-tab="policies">Policies</a></li>
+          <li class="nav-dropdown-wrap">
+            <button type="button" class="nav-dropdown-trigger nav-item" id="policies-trigger" data-tab="policies" aria-haspopup="true" aria-expanded="false" aria-controls="policies-dropdown">
+              Policies
+              <svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true" focusable="false">
+                <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
+            <div class="nav-dropdown-panel" id="policies-dropdown" hidden>
+              <ul>
+                <li><a href="#policies" data-policy="noteapt">NoteApt</a></li>
+                <!--
+                  Future app dropdown item template:
+                  <li><a href="#policies" data-policy="<slug>"><App Name></a></li>
+                -->
+              </ul>
+            </div>
+          </li>
           <li><a href="#contact" data-tab="contact">Contact</a></li>
         </ul>
       </nav>
@@ -94,7 +110,7 @@
           <!--
             To add a future app, copy the <article class="app-card"> block above, then:
             - update the heading, description, feature list, and links
-            - link the "Privacy Policy" button to the app's policy anchor, e.g. href="#<slug>-privacy"
+            - link the "Privacy Policy" button to #policies
           -->
         </div>
       </div>
@@ -106,40 +122,6 @@
         <header class="section-header">
           <h2 id="policies-heading">Privacy Policies</h2>
         </header>
-
-        <!-- App policy submenu groups: one collapsible group per app. Each group header is a button. -->
-        <nav class="policy-submenu" id="policy-submenu">
-          <ul class="policy-submenu-groups">
-            <li class="policy-submenu-group" id="group-noteapt">
-              <button class="policy-group-header" type="button" id="group-noteapt-header" aria-expanded="true" aria-controls="group-noteapt-items">
-                <span class="group-name">NoteApt</span>
-                <svg class="group-toggle" aria-hidden="true" viewBox="0 0 10 6" focusable="false">
-                  <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg>
-              </button>
-              <ul class="policy-submenu-items" id="group-noteapt-items">
-                <li>
-                  <a href="#policies" data-policy="noteapt" aria-current="true">Privacy Policy</a>
-                </li>
-                <!-- Future items for this app: <li><a href="#policies" data-policy="noteapt-terms">Terms of Service</a></li> -->
-              </ul>
-            </li>
-            <!--
-              Future app submenu group template (add a matching policy section below):
-              <li class="policy-submenu-group" id="group-<slug>">
-                <button class="policy-group-header" type="button" id="group-<slug>-header" aria-expanded="true" aria-controls="group-<slug>-items">
-                  <span class="group-name"><App Name></span>
-                  <svg class="group-toggle" aria-hidden="true" viewBox="0 0 10 6" focusable="false">
-                    <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-                  </svg>
-                </button>
-                <ul class="policy-submenu-items" id="group-<slug>-items">
-                  <li><a href="#policies" data-policy="<slug>">Privacy Policy</a></li>
-                </ul>
-              </li>
-            -->
-          </ul>
-        </nav>
 
         <section id="noteapt-privacy" class="policy-document">
           <h1>Privacy Policy for NoteApt</h1>
@@ -197,7 +179,8 @@
         </section>
         <!--
           To add a future app policy section, add a <section id="<slug>-privacy" class="policy-document">
-          below this block, register its anchor in script.js ROUTES map, and add a matching submenu group above.
+          below this block, register its anchor in script.js ROUTES map, and add a matching dropdown item
+          in the header navigation above.
         -->
       </div>
     </section>
