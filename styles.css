@@ -396,9 +396,9 @@ section.panel[hidden] {
   background: var(--color-bg);
 }
 
-.policy-submenu ul {
+.policy-submenu-groups {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   overflow-x: auto;
   list-style: none;
   margin: 0;
@@ -410,17 +410,68 @@ section.panel[hidden] {
   scrollbar-width: none;
 }
 
-.policy-submenu ul::-webkit-scrollbar {
+.policy-submenu-groups::-webkit-scrollbar {
   display: none;
 }
 
-.policy-submenu li {
+.policy-submenu-group {
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.policy-submenu a {
-  display: block;
+.policy-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
   padding: 6px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.policy-group-header:hover {
+  background: var(--color-border);
+}
+
+.policy-group-header:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.policy-group-header .group-toggle {
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.policy-submenu-items {
+  list-style: none;
+  margin: 6px 0 0 4px;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.policy-submenu-items[hidden] {
+  display: none;
+}
+
+.policy-submenu-items li {
+  margin: 0;
+}
+
+.policy-submenu-items a {
+  display: block;
+  padding: 4px 16px;
   border: 1px solid var(--color-border);
   border-radius: 999px;
   background: var(--color-surface);
@@ -431,11 +482,12 @@ section.panel[hidden] {
   white-space: nowrap;
 }
 
-.policy-submenu a:hover {
+.policy-submenu-items a:hover {
   background: var(--color-border);
 }
 
-.policy-submenu a[aria-current="true"] {
+.policy-submenu-items a[aria-current="true"],
+.policy-group-header[aria-expanded="true"] {
   background: var(--color-primary);
   border-color: var(--color-primary);
   color: var(--color-inverse);

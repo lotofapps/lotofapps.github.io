@@ -1,9 +1,15 @@
 /* ==========================================================================
    LotOfApps — vanilla JavaScript
    - Client-side tab switching via the `hidden` attribute
-   - Hash-based deep linking (#home, #apps, #policies, #contact, #noteapt-privacy)
+   - Hash-based deep linking:
+       #home        -> Home tab
+       #apps        -> Apps tab
+       #policies    -> Policies tab, expand NoteApt group, show NoteApt policy
+       #contact     -> Contact tab
+       #noteapt-privacy -> alias for #policies (normalized to #policies)
    - Theme toggle persisted in localStorage
    - Accessible mobile hamburger menu
+   - Collapsible app submenu groups inside the Policies tab
    ========================================================================== */
 
 (function () {
@@ -12,11 +18,22 @@
   // Tab identifiers; keys match `data-tab` on nav links and panel ids (`panel-<id>`)
   var TABS = ['home', 'apps', 'policies', 'contact'];
 
-  // Policy anchors that open the Policies tab and scroll to a policy section.
-  // To add a future app policy, register its anchor here, e.g. 'otherapp-privacy': 'otherapp'
-  var POLICY_ANCHORS = {
-    'noteapt-privacy': 'noteapt'
+  // Hash-to-route map.
+  // Each entry: { tab, policy, normalize }
+  //   tab      : which tab to activate (always 'policies' for policy hashes)
+  //   policy   : app slug whose policy section to show (matches data-policy)
+  //   normalize: if set, rewrite location.hash to this value on load/click
+  //              (e.g. '#noteapt-privacy' normalizes to '#policies')
+  //
+  // To wire up a future app, add an entry like:
+  //   '<slug>-privacy': { tab: 'policies', policy: '<slug>', normalize: 'policies' },
+  var ROUTES = {
+    'policies': { tab: 'policies', policy: 'noteapt', normalize: null },
+    'noteapt-privacy': { tab: 'policies', policy: 'noteapt', normalize: 'policies' },
   };
+
+  // Default app shown when the Policies tab is opened.
+  var DEFAULT_POLICY_APP = 'noteapt';
 
   var doc = document;
   var htmlEl = doc.documentElement;
@@ -80,53 +97,99 @@
     });
 
     if (id === 'policies') {
-      syncSubmenuFromHash();
+      showDefaultPolicy();
     }
 
     hideMobileMenu();
   }
 
-  function scrollToElement(hash) {
-    var el = doc.getElementById(hash.slice(1));
+  function showDefaultPolicy() {
+    // Expand the default app group (NoteApt) and scroll to its policy section.
+    expandGroup(DEFAULT_POLICY_APP, true);
+    setActivePolicy(DEFAULT_POLICY_APP);
+    scrollToPolicy();
+  }
+
+  function scrollToPolicy() {
+    var el = doc.getElementById('noteapt-privacy');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
+  /* ---------- collapsible submenu groups ---------- */
+  function groupHeaderId(appSlug) {
+    return 'group-' + appSlug + '-header';
+  }
+
+  function groupItemsId(appSlug) {
+    return 'group-' + appSlug + '-items';
+  }
+
+  function expandGroup(appSlug, expand) {
+    var header = doc.getElementById(groupHeaderId(appSlug));
+    var items = doc.getElementById(groupItemsId(appSlug));
+    if (!header || !items) {
+      return;
+    }
+    var currentlyExpanded = header.getAttribute('aria-expanded') === 'true';
+    if (expand === currentlyExpanded) {
+      return;
+    }
+    header.setAttribute('aria-expanded', String(expand));
+    if (expand) {
+      items.removeAttribute('hidden');
+    } else {
+      items.setAttribute('hidden', '');
+    }
+  }
+
+  function toggleGroup(appSlug) {
+    var header = doc.getElementById(groupHeaderId(appSlug));
+    var expanded = header ? header.getAttribute('aria-expanded') === 'true' : false;
+    expandGroup(appSlug, !expanded);
+    // Always keep/activate Policies tab, set canonical hash, and scroll to policy.
+    activateTab('policies');
+    setHash('policies');
+    scrollToPolicy();
+  }
+
   function setActivePolicy(slug) {
-    doc.querySelectorAll('.policy-submenu a[data-policy]').forEach(function (chip) {
-      if (chip.dataset.policy === slug) {
-        chip.setAttribute('aria-current', 'true');
+    doc.querySelectorAll('.policy-submenu-items a[data-policy]').forEach(function (item) {
+      if (item.dataset.policy === slug) {
+        item.setAttribute('aria-current', 'true');
       } else {
-        chip.removeAttribute('aria-current');
+        item.removeAttribute('aria-current');
       }
     });
   }
 
-  function syncSubmenuFromHash() {
-    var slug = POLICY_ANCHORS[location.hash.slice(1)];
-    if (slug) {
-      setActivePolicy(slug);
-    } else {
-      doc.querySelectorAll('.policy-submenu a[data-policy]').forEach(function (chip) {
-        chip.removeAttribute('aria-current');
-      });
+  /* ---------- hash helpers ---------- */
+  function setHash(hash) {
+    if (location.hash !== '#' + hash) {
+      location.hash = '#' + hash;
     }
   }
 
   function onHashChange() {
     var hash = location.hash.slice(1);
+    var route = ROUTES[hash];
 
-    if (!hash || TABS.indexOf(hash) !== -1) {
-      activateTab(hash || 'home');
+    if (route) {
+      // Policy anchor (e.g. #policies or #noteapt-privacy alias)
+      if (route.normalize && location.hash !== '#' + route.normalize) {
+        location.hash = '#' + route.normalize;
+        return;
+      }
+      activateTab(route.tab);
+      expandGroup(route.policy, true);
+      setActivePolicy(route.policy);
+      scrollToPolicy();
       return;
     }
 
-    if (POLICY_ANCHORS[hash] !== undefined) {
-      // e.g. https://<user>.github.io/<repo>/#noteapt-privacy — opened from Google Play Console
-      activateTab('policies');
-      scrollToElement(location.hash);
-      syncSubmenuFromHash();
+    if (TABS.indexOf(hash) !== -1) {
+      activateTab(hash || 'home');
       return;
     }
 
@@ -136,31 +199,44 @@
   /* ---------- anchor delegation (in-page links) ---------- */
   doc.addEventListener('click', function (e) {
     var link = e.target.closest('a[href^="#"]');
-    if (!link) {
-      return;
+    if (link) {
+      var href = link.getAttribute('href');
+      var hash = href.slice(1);
+
+      if (hash === '') {
+        // Placeholder link (e.g. "Get it on Google Play" before a real URL is added)
+        e.preventDefault();
+        return;
+      }
+
+      var route = ROUTES[hash];
+      if (route) {
+        e.preventDefault();
+        activateTab(route.tab);
+        expandGroup(route.policy, true);
+        setActivePolicy(route.policy);
+        scrollToPolicy();
+        if (route.normalize && location.hash !== '#' + route.normalize) {
+          location.hash = '#' + route.normalize;
+        } else {
+          setHash(hash);
+        }
+        return;
+      }
+
+      if (TABS.indexOf(hash) !== -1) {
+        e.preventDefault();
+        location.hash = hash;
+        return;
+      }
     }
 
-    var href = link.getAttribute('href');
-    var hash = href.slice(1);
-
-    if (hash === '') {
-      // Placeholder link (e.g. "Get it on Google Play" before a real URL is added)
+    // Collapsible submenu group header button click
+    var button = e.target.closest('button.policy-group-header');
+    if (button) {
+      var appSlug = button.id.replace('group-', '').replace('-header', '');
       e.preventDefault();
-      return;
-    }
-
-    if (TABS.indexOf(hash) !== -1) {
-      e.preventDefault();
-      location.hash = hash;
-      return;
-    }
-
-    if (POLICY_ANCHORS[hash] !== undefined) {
-      e.preventDefault();
-      activateTab('policies');
-      scrollToElement(location.hash);
-      setActivePolicy(POLICY_ANCHORS[hash]);
-      location.hash = hash;
+      toggleGroup(appSlug);
       return;
     }
   });

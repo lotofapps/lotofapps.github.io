@@ -56,7 +56,7 @@
 
   <main id="main" tabindex="-1">
     <!-- HOME -->
-    <section id="panel-home" class="panel" aria-labelledby="home-heading">
+    <section id="panel-home" class="panel hidden" aria-labelledby="home-heading">
       <div class="hero">
         <h1 id="home-heading">LotOfApps</h1>
         <p class="tagline">Simple, privacy-friendly Android apps for everyday life.</p>
@@ -68,7 +68,7 @@
     </section>
 
     <!-- APPS -->
-    <section id="panel-apps" class="panel" aria-labelledby="apps-heading">
+    <section id="panel-apps" class="panel hidden" aria-labelledby="apps-heading">
       <div class="section-wrap">
         <header class="section-header">
           <h2 id="apps-heading">Apps</h2>
@@ -88,7 +88,7 @@
             <div class="card-actions">
               <!-- TODO: replace href="#" with the real Google Play Store URL once the app is published -->
               <a href="#" class="btn">Get it on Google Play</a>
-              <a href="#noteapt-privacy" class="btn btn-outline">Privacy Policy</a>
+              <a href="#policies" class="btn btn-outline">Privacy Policy</a>
             </div>
           </article>
           <!--
@@ -101,19 +101,38 @@
     </section>
 
     <!-- POLICIES -->
-    <section id="panel-policies" class="panel" aria-labelledby="policies-heading">
+    <section id="panel-policies" class="panel hidden" aria-labelledby="policies-heading">
       <div class="section-wrap">
         <header class="section-header">
           <h2 id="policies-heading">Privacy Policies</h2>
         </header>
 
-        <!-- App policy submenu: one chip per app. Clicking a chip scrolls to that app's policy section below. -->
+        <!-- App policy submenu groups: one collapsible group per app. Each group header is a button. -->
         <nav class="policy-submenu" id="policy-submenu">
-          <ul>
-            <li><a href="#noteapt-privacy" data-policy="noteapt">NoteApt — Privacy Policy</a></li>
+          <ul class="policy-submenu-groups">
+            <li class="policy-submenu-group" id="group-noteapt">
+              <button class="policy-group-header" id="group-noteapt-header" aria-expanded="true" aria-controls="group-noteapt-items">
+                <span class="group-name">NoteApt</span>
+                <span class="group-toggle" aria-hidden="true">▾</span>
+              </button>
+              <ul class="policy-submenu-items" id="group-noteapt-items">
+                <li>
+                  <a href="#policies" data-policy="noteapt" aria-current="true">Privacy Policy</a>
+                </li>
+                <!-- Future items for this app: <li><a href="#policies" data-policy="noteapt-terms">Terms of Service</a></li> -->
+              </ul>
+            </li>
             <!--
-              To add a future app policy, insert a chip like the one above, e.g.:
-              <li><a href="#<slug>-privacy" data-policy="<slug>"><App Name> — Privacy Policy</a></li>
+              Future app submenu group template (add a matching policy section below):
+              <li class="policy-submenu-group" id="group-<slug>">
+                <button class="policy-group-header" id="group-<slug>-header" aria-expanded="true" aria-controls="group-<slug>-items">
+                  <span class="group-name"><App Name></span>
+                  <span class="group-toggle" aria-hidden="true">▾</span>
+                </button>
+                <ul class="policy-submenu-items" id="group-<slug>-items">
+                  <li><a href="#policies" data-policy="<slug>">Privacy Policy</a></li>
+                </ul>
+              </li>
             -->
           </ul>
         </nav>
@@ -173,16 +192,14 @@
           <p>If you have questions, email <a href="mailto:lotofapps@gmail.com">lotofapps@gmail.com</a>.</p>
         </section>
         <!--
-          To add a future app policy, add a section like the one above after this block, e.g.:
-          <section id="<slug>-privacy" class="policy-document">
-            ... policy content ...
-          </section>
+          To add a future app policy section, add a <section id="<slug>-privacy" class="policy-document">
+          below this block, register its anchor in script.js ROUTES map, and add a matching submenu group above.
         -->
       </div>
     </section>
 
     <!-- CONTACT -->
-    <section id="panel-contact" class="panel" aria-labelledby="contact-heading">
+    <section id="panel-contact" class="panel hidden" aria-labelledby="contact-heading">
       <div class="section-wrap">
         <header class="section-header">
           <h2 id="contact-heading">Contact</h2>
