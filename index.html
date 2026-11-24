@@ -1,224 +1,735 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#ffffff" id="meta-theme-color">
-  <meta name="description" content="LotOfApps — Simple, privacy-friendly Android apps built by an indie developer.">
-  <title>LotOfApps — Simple, privacy-friendly Android apps</title>
-  <meta property="og:title" content="LotOfApps">
-  <meta property="og:description" content="Simple, privacy-friendly Android apps built by an indie developer.">
-  <meta property="og:type" content="website">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%232563eb%22/%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2230%22 fill=%22%23ffffff%22/%3E%3Ctext x=%2250%22 y=%2262%22 font-family=%22sans-serif%22 font-size=%2242%22 font-weight=%22bold%22 fill=%22%232563eb%22 text-anchor=%22middle%22%3EL%3C/text%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <a href="#main" class="skip-link">Skip to content</a>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
+    <meta
+      name="description"
+      content="LotOfApps — Simple, privacy-friendly Android apps built by an indie developer."
+    />
+    <title>LotOfApps — Simple, privacy-friendly Android apps</title>
+    <meta property="og:title" content="LotOfApps" />
+    <meta
+      property="og:description"
+      content="Simple, privacy-friendly Android apps built by an indie developer."
+    />
+    <meta property="og:type" content="website" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%232563eb%22/%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2230%22 fill=%22%23ffffff%22/%3E%3Ctext x=%2250%22 y=%2262%22 font-family=%22sans-serif%22 font-size=%2242%22 font-weight=%22bold%22 fill=%22%232563eb%22 text-anchor=%22middle%22%3EL%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
 
-  <header class="site-header" id="site-header">
-    <div class="header-inner">
-      <a href="#home" class="brand" aria-label="LotOfApps home">
-        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-          <rect width="32" height="32" rx="8"></rect>
-          <circle cx="16" cy="13" r="6"></circle>
-          <path d="M10 22 Q16 26 22 22 M10 25 Q16 29 22 25" stroke-linecap="round"></path>
-        </svg>
-        <span class="brand-name">LotOfApps</span>
-      </a>
+    <header class="site-header" id="site-header">
+      <div class="header-inner">
+        <a href="#home" class="brand" aria-label="LotOfApps home">
+          <svg
+            class="brand-mark"
+            viewBox="0 0 32 32"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <rect width="32" height="32" rx="8"></rect>
+            <circle cx="16" cy="13" r="6"></circle>
+            <path
+              d="M10 22 Q16 26 22 22 M10 25 Q16 29 22 25"
+              stroke-linecap="round"
+              stroke-width="2"
+              fill="none"
+            ></path>
+          </svg>
+          <span class="brand-name">LotOfApps</span>
+        </a>
 
-      <button class="theme-toggle" id="theme-toggle" aria-label="Switch to dark theme">
-        <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <circle cx="12" cy="12" r="5" stroke-linecap="round"></circle>
-          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M17.66 6.34l-1.41 1.41" stroke-linecap="round"></path>
-        </svg>
-        <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
-      </button>
-
-      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation menu">
-        <span class="hamburger" aria-hidden="true"></span>
-        <span class="visually-hidden">Menu</span>
-      </button>
-
-      <nav class="site-nav" id="site-nav">
-        <ul>
-          <li><a href="#home" data-tab="home" aria-current="page">Home</a></li>
-          <li><a href="#apps" data-tab="apps">Apps</a></li>
-          <li class="nav-dropdown">
-            <a href="#policies" data-tab="policies">Policies
-              <svg class="nav-caret" width="10" height="10" viewBox="0 0 10 6" fill="currentColor" aria-hidden="true" focusable="false" style="vertical-align:middle">
-                <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
-            </a>
-            <div class="nav-dropdown-menu">
-              <span class="nav-dropdown-label">Apps</span>
-              <a href="#policies" class="nav-dropdown-item">
-                <span class="item-icon">N</span>
-                <span class="item-text">
-                  <span class="item-name">NoteApt</span>
-                  <span class="item-subtitle">Privacy Policy</span>
-                </span>
+        <nav class="site-nav" id="site-nav" aria-label="Primary Navigation">
+          <ul>
+            <li>
+              <a href="#home" data-tab="home" aria-current="page">Home</a>
+            </li>
+            <li>
+              <a href="#apps" data-tab="apps">Apps</a>
+            </li>
+            <li class="nav-dropdown">
+              <a
+                href="#policies"
+                data-tab="policies"
+                class="nav-dropdown-trigger"
+              >
+                <span>Policies</span>
+                <svg
+                  class="nav-caret"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 10 6"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="M1 1l4 4 4-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
               </a>
-              <!--
-                Future app dropdown item template:
-                <a href="#policies" class="nav-dropdown-item">
-                  <span class="item-icon"><App Initial></span>
-                  <span class="item-text"><span class="item-name"><App Name></span><span class="item-subtitle">Privacy Policy</span></span>
+              <div class="nav-dropdown-menu" role="menu">
+                <span class="nav-dropdown-label">App Policies</span>
+                <a
+                  href="#noteapt-privacy"
+                  class="nav-dropdown-item"
+                  role="menuitem"
+                >
+                  <span class="item-icon">N</span>
+                  <span class="item-text">
+                    <span class="item-name">NoteApt</span>
+                    <span class="item-subtitle">Privacy Policy</span>
+                  </span>
                 </a>
-              -->
-            </div>
-          </li>
-          <li><a href="#contact" data-tab="contact">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+                <!--
+                Future app dropdown item template:
+                <a href="#app-slug-privacy" class="nav-dropdown-item" role="menuitem">
+                  <span class="item-icon">A</span>
+                  <span class="item-text">
+                    <span class="item-name">App Name</span>
+                    <span class="item-subtitle">Privacy Policy</span>
+                  </span>
+                </a>
+                -->
+              </div>
+            </li>
+            <li>
+              <a href="#contact" data-tab="contact">Contact</a>
+            </li>
+          </ul>
+        </nav>
 
-  <main id="main" tabindex="-1">
-    <!-- HOME -->
-    <section id="panel-home" class="panel hidden" aria-labelledby="home-heading">
-      <div class="hero">
-        <h1 id="home-heading">LotOfApps</h1>
-        <p class="tagline">Simple, privacy-friendly Android apps for everyday life.</p>
-        <div class="hero-actions">
-          <a href="#apps" class="btn btn-primary">Explore Apps</a>
-          <a href="#policies" class="btn btn-outline">Privacy Policies</a>
+        <div class="header-controls">
+          <button
+            class="theme-toggle"
+            id="theme-toggle"
+            aria-label="Switch theme"
+            title="Toggle dark/light theme"
+          >
+            <svg
+              class="icon icon-sun"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="5" stroke-linecap="round"></circle>
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M17.66 6.34l-1.41 1.41"
+                stroke-linecap="round"
+              ></path>
+            </svg>
+            <svg
+              class="icon icon-moon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+          </button>
+
+          <button
+            class="nav-toggle"
+            id="nav-toggle"
+            aria-expanded="false"
+            aria-controls="site-nav"
+            aria-label="Open navigation menu"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+            </svg>
+            <span class="visually-hidden">Menu</span>
+          </button>
         </div>
       </div>
-    </section>
+    </header>
 
-    <!-- APPS -->
-    <section id="panel-apps" class="panel hidden" aria-labelledby="apps-heading">
-      <div class="section-wrap">
-        <header class="section-header">
-          <h2 id="apps-heading">Apps</h2>
-          <p class="apps-intro">Android apps built with privacy in mind.</p>
-        </header>
-        <div class="app-grid">
-          <article class="app-card">
-            <h3>NoteApt</h3>
-            <p>A notes app with Google Drive sync, voice typing, note locking, reminders, and media attachments.</p>
-            <ul class="features">
-              <li>Google Drive sync</li>
-              <li>Voice typing</li>
-              <li>Note locking</li>
-              <li>Reminders</li>
-              <li>Media attachments</li>
-            </ul>
-            <div class="card-actions">
-              <!-- TODO: replace href="#" with the real Google Play Store URL once the app is published -->
-              <a href="#" class="btn">Get it on Google Play</a>
-              <a href="#policies" class="btn btn-outline">Privacy Policy</a>
+    <main id="main" tabindex="-1">
+      <!-- HOME -->
+      <section id="panel-home" class="panel" aria-labelledby="home-heading">
+        <div class="hero-wrapper">
+          <div class="hero">
+            <span class="hero-badge">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              Privacy-First Indie Studio
+            </span>
+            <h1 id="home-heading">
+              Simple, private Android apps for
+              <span class="text-gradient">everyday life.</span>
+            </h1>
+            <p class="tagline">
+              Thoughtfully crafted tools with local-first storage, optional
+              personal cloud backup, and transparent privacy policies.
+            </p>
+            <div class="hero-actions">
+              <a href="#apps" class="btn btn-primary">
+                <span>Explore Apps</span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M5 12h14M12 5l7 7-7 7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+              <a href="#policies" class="btn btn-outline"
+                >Read Privacy Policies</a
+              >
             </div>
+          </div>
+
+          <div class="pillars-grid">
+            <div class="pillar-card">
+              <div class="pillar-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                  <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                  <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                  <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                </svg>
+              </div>
+              <h3>No Private Servers</h3>
+              <p>
+                Your personal data stays directly on your device—never uploaded
+                to our servers.
+              </p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </div>
+              <h3>Zero Analytics Tracking</h3>
+              <p>
+                No behavioral profiling, no third-party crash trackers, and no
+                required accounts.
+              </p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+              </div>
+              <h3>You Own Your Backups</h3>
+              <p>
+                Sync seamlessly to your own Google Drive folder or export local
+                backups anytime.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- APPS -->
+      <section id="panel-apps" class="panel" aria-labelledby="apps-heading">
+        <div class="section-wrap">
+          <header class="section-header">
+            <span class="section-eyebrow">Portfolio</span>
+            <h2 id="apps-heading">Published & Upcoming Apps</h2>
+            <p class="apps-intro">
+              Lightweight Android utilities built with privacy and speed in
+              mind.
+            </p>
+          </header>
+
+          <div class="app-grid">
+            <article class="app-card">
+              <div class="app-card-top">
+                <div class="app-icon-badge" aria-hidden="true">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                    ></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                  </svg>
+                </div>
+                <span class="app-status-tag">Android</span>
+              </div>
+
+              <h3>NoteApt</h3>
+              <p class="app-desc">
+                A fast, distraction-free notes app with encrypted note locking,
+                voice typing, reminders, and personal Google Drive sync.
+              </p>
+
+              <ul class="features">
+                <li>
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>Google Drive sync & local backups</span>
+                </li>
+                <li>
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>AES encrypted PIN & biometric lock</span>
+                </li>
+                <li>
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>Voice typing & read-aloud</span>
+                </li>
+                <li>
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>Reminders & rich media attachments</span>
+                </li>
+              </ul>
+
+              <div class="card-actions">
+                <!-- TODO: replace href="#" with the real Google Play Store URL once published -->
+                <a href="#" class="btn btn-primary">Google Play</a>
+                <a href="#noteapt-privacy" class="btn btn-outline"
+                  >Privacy Policy</a
+                >
+              </div>
+            </article>
+            <!--
+            To add a future app, copy the <article class="app-card"> block above, then:
+            - update the icon, title, description, feature list, and links
+            - link the "Privacy Policy" button to #<slug>-privacy
+            -->
+          </div>
+        </div>
+      </section>
+
+      <!-- POLICIES -->
+      <section
+        id="panel-policies"
+        class="panel"
+        aria-labelledby="policies-heading"
+      >
+        <div class="section-wrap">
+          <header class="section-header">
+            <span class="section-eyebrow">Legal & Transparency</span>
+            <h2 id="policies-heading">Privacy Policies</h2>
+            <p class="apps-intro">
+              Select an application below to read its complete data handling
+              practices.
+            </p>
+
+            <!-- Quick App Switcher Pills (useful as you add more apps) -->
+            <div
+              class="policy-switcher"
+              role="navigation"
+              aria-label="App policy selector"
+            >
+              <a href="#noteapt-privacy" class="policy-pill active">NoteApt</a>
+              <!-- Future app pill example: <a href="#musicplayer-privacy" class="policy-pill">Music Player</a> -->
+            </div>
+          </header>
+
+          <article id="noteapt-privacy" class="policy-document">
+            <div class="policy-doc-header">
+              <div class="policy-meta-badges">
+                <span class="badge-pill">Effective: November 24, 2026</span>
+                <span class="badge-pill">Developer: LotOfApps</span>
+              </div>
+              <h1>Privacy Policy for NoteApt</h1>
+              <p class="policy-contact-line">
+                Questions? Contact us at
+                <a href="mailto:lotofapps@gmail.com">lotofapps@gmail.com</a>
+              </p>
+            </div>
+
+            <div class="callout">
+              <p>
+                <strong>In short:</strong> Your notes stay on your device. If
+                you choose to sign in with Google, they are backed up to your
+                own Google Drive. We run no servers, have no user accounts, and
+                cannot see your notes. The app shows ads provided by Google
+                AdMob, which may collect device identifiers.
+              </p>
+            </div>
+
+            <h2>1. Introduction</h2>
+            <p>
+              This Privacy Policy explains how the NoteApt app ("the App"),
+              developed by LotOfApps ("we", "us"), handles information. We do
+              not operate any server that stores your notes or personal data.
+            </p>
+
+            <h2>2. Information we collect</h2>
+            <p>
+              We do not collect, store, or have access to your notes,
+              attachments, or personal information on any server of ours. The
+              App has no accounts of its own and uses no analytics or
+              crash-reporting services.
+            </p>
+            <p>
+              Everything you create (text, checklists, images, audio recordings,
+              videos, tags, categories, reminders and settings) is stored
+              locally on your device.
+            </p>
+
+            <h2>3. Google sign-in and Google Drive sync (optional)</h2>
+            <p>
+              Signing in with Google is optional and is used only to back up and
+              sync your notes.
+            </p>
+            <ul>
+              <li>
+                <strong>What the App requests:</strong> your basic Google
+                profile (email address, name and profile picture) and access to
+                files that the App itself creates in your Google Drive (the
+                <code>drive.file</code> permission). The App cannot see your
+                other Drive files.
+              </li>
+              <li>
+                <strong>What it stores in your Drive:</strong> a folder named
+                <code>MyNotes App Data</code> containing your synced notes,
+                photos, audio recordings, videos you choose to upload, and
+                backup files.
+              </li>
+              <li>
+                <strong>Your profile details</strong> are kept only on your
+                device so the App can show which account is signed in.
+              </li>
+              <li>
+                <strong>Who can see it:</strong> only you. Your synced data
+                stays in your Google account. It is not sent to us or to any
+                third party.
+              </li>
+            </ul>
+            <p>
+              You can turn sync off for any note, sign out, or delete the
+              "MyNotes App Data" folder in Google Drive at any time. You can
+              also revoke the App's access at
+              <a
+                href="https://myaccount.google.com/permissions"
+                target="_blank"
+                rel="noopener noreferrer"
+                >myaccount.google.com/permissions</a
+              >. Use of information received from Google APIs adheres to the
+              <a
+                href="https://developers.google.com/terms/api-services-user-data-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Google API Services User Data Policy</a
+              >, including the Limited Use requirements.
+            </p>
+
+            <h2>4. Note locking and encryption</h2>
+            <p>
+              If you lock a note with a PIN, the text of that note is encrypted
+              on your device (AES, with a key derived from your PIN). Your PIN
+              is never sent to us. Only a hashed form of it is kept on your
+              device. If a locked note is synced, the encrypted text is what is
+              uploaded to your Drive.
+            </p>
+            <p>
+              Attached photos, audio recordings and videos are not encrypted by
+              the App, including when they are backed up to your Drive or
+              exported. Please keep this in mind when adding sensitive media.
+            </p>
+
+            <h2>5. Advertising</h2>
+            <p>
+              The App shows ads provided by Google AdMob, including a short
+              full-screen ad that may appear when you launch the App. AdMob may
+              collect and use certain information, such as your device's
+              advertising ID, IP address, and device and app interaction data,
+              to deliver ads and measure their performance. This is governed by
+              <a
+                href="https://policies.google.com/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Google's Privacy Policy</a
+              >. You can reset your advertising ID or opt out of ad
+              personalization in your device settings. Where required by law
+              (for example in the European Economic Area and the United
+              Kingdom), we ask for your consent before showing ads.
+            </p>
+
+            <h2>6. Permissions</h2>
+            <p>
+              The App may ask for the following permissions. Each is used only
+              for the feature described.
+            </p>
+            <ul>
+              <li>
+                <strong>Microphone:</strong> voice typing and audio recording.
+              </li>
+              <li>
+                <strong>Camera:</strong> taking photos and videos to attach to
+                notes.
+              </li>
+              <li>
+                <strong>Photos, videos and files:</strong> attaching media you
+                choose, and saving or restoring backups.
+              </li>
+              <li><strong>Notifications:</strong> reminders you set.</li>
+              <li><strong>Fingerprint / face unlock:</strong> App Lock.</li>
+              <li><strong>Internet:</strong> Google Drive sync and ads.</li>
+              <li><strong>Vibration:</strong> haptic feedback.</li>
+            </ul>
+
+            <h2>7. Voice typing and read-aloud</h2>
+            <p>
+              Voice typing uses your device's speech recognition service,
+              provided by Google or your device manufacturer. Depending on your
+              device and language, your speech may be processed on Google's
+              servers under Google's privacy policy. We do not receive or store
+              this audio. Read-aloud uses your device's text-to-speech engine.
+            </p>
+
+            <h2>8. Sharing of information</h2>
+            <p>
+              We do not sell your personal data and we do not share it with
+              third parties, except that Google AdMob receives the
+              advertising-related data described in section 5, and Google
+              processes your sign-in and Drive sync as described in section 3.
+              When you export or share a note (image, PDF, text, media or note
+              file), it goes where you choose, using your device's share
+              options.
+            </p>
+
+            <h2>9. Data retention and deletion</h2>
+            <ul>
+              <li>
+                <strong>On your device:</strong> data stays until you delete it
+                or uninstall the App. Signing out does not delete your notes
+                from your device.
+              </li>
+              <li>
+                <strong>In Google Drive:</strong> synced files stay in your
+                Drive until you remove them. Inside the App you can choose
+                "Remove from Drive" for a note, or delete the "MyNotes App Data"
+                folder yourself in Google Drive. Uninstalling the App does not
+                delete files already in your Drive.
+              </li>
+              <li>
+                <strong>With us:</strong> we hold no copy of your data, so there
+                is nothing for us to delete.
+              </li>
+            </ul>
+
+            <h2>10. Children's privacy</h2>
+            <p>
+              The App is not directed to children under 13, and we do not
+              knowingly collect personal information from children.
+            </p>
+
+            <h2>11. Changes to this policy</h2>
+            <p>
+              We may update this policy from time to time. The latest version
+              will always be on this page, with its effective date.
+            </p>
+
+            <h2>12. Contact us</h2>
+            <p>
+              If you have questions about this Privacy Policy, email
+              <a href="mailto:lotofapps@gmail.com">lotofapps@gmail.com</a>.
+            </p>
           </article>
           <!--
-            To add a future app, copy the <article class="app-card"> block above, then:
-            - update the heading, description, feature list, and links
-            - link the "Privacy Policy" button to #policies
+          To add a future app policy section, add an <article id="<slug>-privacy" class="policy-document">
+          below this block, register its anchor in script.js ROUTES map, and add a matching dropdown item
+          in the header navigation and policy-switcher above.
           -->
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- POLICIES -->
-    <section id="panel-policies" class="panel hidden" aria-labelledby="policies-heading">
-      <div class="section-wrap">
-        <header class="section-header">
-          <h2 id="policies-heading">Privacy Policies</h2>
-        </header>
+      <!-- CONTACT -->
+      <section
+        id="panel-contact"
+        class="panel"
+        aria-labelledby="contact-heading"
+      >
+        <div class="section-wrap">
+          <header class="section-header">
+            <span class="section-eyebrow">Support & Feedback</span>
+            <h2 id="contact-heading">Get in Touch</h2>
+            <p class="apps-intro">
+              Have a question, bug report, or privacy inquiry? Reach out
+              anytime.
+            </p>
+          </header>
 
-        <section id="noteapt-privacy" class="policy-document">
-          <h1>Privacy Policy for NoteApt</h1>
-          <p>Effective date: November 24, 2026</p>
-          <p>Developer: LotOfApps · Contact: <a href="mailto:lotofapps@gmail.com">lotofapps@gmail.com</a></p>
-          <div class="callout">
-            <p><strong>In short:</strong> your notes stay on your device. If you choose to sign in with Google, they are backed up to your own Google Drive. We run no servers, have no user accounts, and cannot see your notes. The app shows ads provided by Google AdMob, which may collect device identifiers.</p>
+          <div class="contact-grid">
+            <a href="mailto:lotofapps@gmail.com" class="contact-item-card">
+              <div class="contact-icon">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                  ></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </div>
+              <div class="contact-details">
+                <h3>Email Support</h3>
+                <p>lotofapps@gmail.com</p>
+              </div>
+            </a>
+
+            <!-- TODO: replace with your real GitHub profile URL -->
+            <a
+              href="https://github.com/lotofapps"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="contact-item-card"
+            >
+              <div class="contact-icon">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+                  ></path>
+                </svg>
+              </div>
+              <div class="contact-details">
+                <h3>GitHub</h3>
+                <p>@lotofapps</p>
+              </div>
+            </a>
           </div>
-          <h2>1. Introduction</h2>
-          <p>This Privacy Policy explains how the NoteApt app ("the App"), developed by LotOfApps ("we", "us"), handles information. We do not operate any server that stores your notes or personal data.</p>
-          <h2>2. Information we collect</h2>
-          <p>We do not collect, store, or have access to your notes, attachments, or personal information on any server of ours. The App has no accounts of its own and uses no analytics or crash-reporting services.</p>
-          <p>Everything you create (text, checklists, images, audio recordings, videos, tags, categories, reminders and settings) is stored locally on your device.</p>
-          <h2>3. Google sign-in and Google Drive sync (optional)</h2>
-          <p>Signing in with Google is optional and is used only to back up and sync your notes.</p>
-          <ul>
-            <li><strong>What the App requests:</strong> your basic Google profile (email address, name and profile picture) and access to files that the App itself creates in your Google Drive (the "drive.file" permission). The App cannot see your other Drive files.</li>
-            <li><strong>What it stores in your Drive:</strong> a folder named "MyNotes App Data" containing your synced notes, photos, audio recordings, videos you choose to upload, and backup files.</li>
-            <li><strong>Your profile details</strong> are kept only on your device so the App can show which account is signed in.</li>
-            <li><strong>Who can see it:</strong> only you. Your synced data stays in your Google account. It is not sent to us or to any third party.</li>
-          </ul>
-          <p>You can turn sync off for any note, sign out, or delete the "MyNotes App Data" folder in Google Drive at any time. You can also revoke the App's access at <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer">myaccount.google.com/permissions</a>. Use of information received from Google APIs adheres to the Google API Services User Data Policy <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer">(link to https://developers.google.com/terms/api-services-user-data-policy)</a>, including the Limited Use requirements.</p>
-          <h2>4. Note locking and encryption</h2>
-          <p>If you lock a note with a PIN, the text of that note is encrypted on your device (AES, with a key derived from your PIN). Your PIN is never sent to us. Only a hashed form of it is kept on your device. If a locked note is synced, the encrypted text is what is uploaded to your Drive.</p>
-          <p>Attached photos, audio recordings and videos are not encrypted by the App, including when they are backed up to your Drive or exported. Please keep this in mind when adding sensitive media.</p>
-          <h2>5. Advertising</h2>
-          <p>The App shows ads provided by Google AdMob, including a short full-screen ad that may appear when you launch the App. AdMob may collect and use certain information, such as your device's advertising ID, IP address, and device and app interaction data, to deliver ads and measure their performance. This is governed by Google's privacy policy: policies.google.com/privacy <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">(link to https://policies.google.com/privacy)</a>. You can reset your advertising ID or opt out of ad personalization in your device settings. Where required by law (for example in the European Economic Area and the United Kingdom), we ask for your consent before showing ads.</p>
-          <h2>6. Permissions</h2>
-          <p>The App may ask for the following permissions. Each is used only for the feature described.</p>
-          <ul>
-            <li><strong>Microphone:</strong> voice typing and audio recording.</li>
-            <li><strong>Camera:</strong> taking photos and videos to attach to notes.</li>
-            <li><strong>Photos, videos and files:</strong> attaching media you choose, and saving or restoring backups.</li>
-            <li><strong>Notifications:</strong> reminders you set.</li>
-            <li><strong>Fingerprint / face unlock:</strong> App Lock.</li>
-            <li><strong>Internet:</strong> Google Drive sync and ads.</li>
-            <li><strong>Vibration:</strong> haptic feedback.</li>
-          </ul>
-          <h2>7. Voice typing and read-aloud</h2>
-          <p>Voice typing uses your device's speech recognition service, provided by Google or your device manufacturer. Depending on your device and language, your speech may be processed on Google's servers under Google's privacy policy. We do not receive or store this audio. Read-aloud uses your device's text-to-speech engine.</p>
-          <h2>8. Sharing of information</h2>
-          <p>We do not sell your personal data and we do not share it with third parties, except that Google AdMob receives the advertising-related data described in section 5, and Google processes your sign-in and Drive sync as described in section 3. When you export or share a note (image, PDF, text, media or note file), it goes where you choose, using your device's share options.</p>
-          <h2>9. Data retention and deletion</h2>
-          <ul>
-            <li><strong>On your device:</strong> data stays until you delete it or uninstall the App. Signing out does not delete your notes from your device.</li>
-            <li><strong>In Google Drive:</strong> synced files stay in your Drive until you remove them. Inside the App you can choose "Remove from Drive" for a note, or delete the "MyNotes App Data" folder yourself in Google Drive. Uninstalling the App does not delete files already in your Drive.</li>
-            <li><strong>With us:</strong> we hold no copy of your data, so there is nothing for us to delete.</li>
-          </ul>
-          <h2>10. Children's privacy</h2>
-          <p>The App is not directed to children under 13, and we do not knowingly collect personal information from children.</p>
-          <h2>11. Changes to this policy</h2>
-          <p>We may update this policy from time to time. The latest version will always be on this page, with its effective date.</p>
-          <h2>12. Contact us</h2>
-          <p>If you have questions, email <a href="mailto:lotofapps@gmail.com">lotofapps@gmail.com</a>.</p>
-        </section>
-        <!--
-          To add a future app policy section, add a <section id="<slug>-privacy" class="policy-document">
-          below this block, register its anchor in script.js ROUTES map, and add a matching dropdown item
-          in the header navigation above.
-        -->
-      </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="panel-contact" class="panel hidden" aria-labelledby="contact-heading">
-      <div class="section-wrap">
-        <header class="section-header">
-          <h2 id="contact-heading">Contact</h2>
-        </header>
-        <div class="contact-card">
-          <p><strong>Email:</strong> <a href="mailto:lotofapps@gmail.com">lotofapps@gmail.com</a></p>
-          <p><strong>GitHub:</strong> <a href="https://github.com/lotofapps" target="_blank" rel="noopener noreferrer">@lotofapps</a> <!-- TODO: replace with the real GitHub profile URL --></p>
         </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <strong>LotOfApps</strong>
+          <span>· Privacy-friendly Android apps</span>
+        </div>
+        <ul class="footer-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#apps">Apps</a></li>
+          <li><a href="#policies">Policies</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <p class="footer-copy">© 2026 LotOfApps. All rights reserved.</p>
       </div>
-    </section>
-  </main>
+    </footer>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <p>© 2026 LotOfApps</p>
-      <ul class="footer-links">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#apps">Apps</a></li>
-        <li><a href="#policies">Policies</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <p><a href="mailto:lotofapps@gmail.com">lotofapps@gmail.com</a></p>
-    </div>
-  </footer>
-
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
