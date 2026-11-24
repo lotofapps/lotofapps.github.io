@@ -47,21 +47,18 @@
         <ul>
           <li><a href="#home" data-tab="home" aria-current="page">Home</a></li>
           <li><a href="#apps" data-tab="apps">Apps</a></li>
-          <li class="nav-dropdown-wrap">
-            <button type="button" class="nav-dropdown-trigger nav-item" id="policies-trigger" data-tab="policies" aria-haspopup="true" aria-expanded="false" aria-controls="policies-dropdown">
-              Policies
-              <svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true" focusable="false">
+          <li class="nav-dropdown">
+            <a href="#policies" data-tab="policies">Policies
+              <svg class="nav-caret" width="10" height="10" viewBox="0 0 10 6" fill="currentColor" aria-hidden="true" focusable="false" style="vertical-align:middle">
                 <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
               </svg>
-            </button>
-            <div class="nav-dropdown-panel" id="policies-dropdown" hidden>
-              <ul>
-                <li><a href="#policies" data-policy="noteapt">NoteApt</a></li>
-                <!--
-                  Future app dropdown item template:
-                  <li><a href="#policies" data-policy="<slug>"><App Name></a></li>
-                -->
-              </ul>
+            </a>
+            <div class="nav-dropdown-menu">
+              <a href="#policies" class="nav-dropdown-item">NoteApt</a>
+              <!--
+                Future app dropdown item template:
+                <a href="#policies" class="nav-dropdown-item"><App Name></a>
+              -->
             </div>
           </li>
           <li><a href="#contact" data-tab="contact">Contact</a></li>
