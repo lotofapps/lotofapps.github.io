@@ -111,9 +111,11 @@
         <nav class="policy-submenu" id="policy-submenu">
           <ul class="policy-submenu-groups">
             <li class="policy-submenu-group" id="group-noteapt">
-              <button class="policy-group-header" id="group-noteapt-header" aria-expanded="true" aria-controls="group-noteapt-items">
+              <button class="policy-group-header" type="button" id="group-noteapt-header" aria-expanded="true" aria-controls="group-noteapt-items">
                 <span class="group-name">NoteApt</span>
-                <span class="group-toggle" aria-hidden="true">▾</span>
+                <svg class="group-toggle" aria-hidden="true" viewBox="0 0 10 6" focusable="false">
+                  <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
               </button>
               <ul class="policy-submenu-items" id="group-noteapt-items">
                 <li>
@@ -125,9 +127,11 @@
             <!--
               Future app submenu group template (add a matching policy section below):
               <li class="policy-submenu-group" id="group-<slug>">
-                <button class="policy-group-header" id="group-<slug>-header" aria-expanded="true" aria-controls="group-<slug>-items">
+                <button class="policy-group-header" type="button" id="group-<slug>-header" aria-expanded="true" aria-controls="group-<slug>-items">
                   <span class="group-name"><App Name></span>
-                  <span class="group-toggle" aria-hidden="true">▾</span>
+                  <svg class="group-toggle" aria-hidden="true" viewBox="0 0 10 6" focusable="false">
+                    <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
                 </button>
                 <ul class="policy-submenu-items" id="group-<slug>-items">
                   <li><a href="#policies" data-policy="<slug>">Privacy Policy</a></li>
