@@ -6,13 +6,13 @@
     <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
     <meta
       name="description"
-      content="LotOfApps — Simple, privacy-friendly Android apps built by an indie developer."
+      content="LotOfApps — Simple, privacy-friendly Android & iOS apps built by an indie developer."
     />
-    <title>LotOfApps — Simple, privacy-friendly Android apps</title>
+    <title>LotOfApps — Simple, privacy-friendly apps</title>
     <meta property="og:title" content="LotOfApps" />
     <meta
       property="og:description"
-      content="Simple, privacy-friendly Android apps built by an indie developer."
+      content="Simple, privacy-friendly Android & iOS apps built by an indie developer."
     />
     <meta property="og:type" content="website" />
     <link
@@ -59,11 +59,17 @@
             <li>
               <a href="#apps" data-tab="apps">Apps</a>
             </li>
-            <li class="nav-dropdown">
+
+            <!-- Policies: matches sibling nav tab styles & highlights when a submenu policy is active -->
+            <li class="nav-dropdown" id="policies-dropdown">
               <a
-                href="#policies"
+                href="#"
                 data-tab="policies"
                 class="nav-dropdown-trigger"
+                id="policies-trigger"
+                aria-expanded="false"
+                aria-haspopup="menu"
+                aria-controls="policies-menu"
               >
                 <span>Policies</span>
                 <svg
@@ -84,31 +90,44 @@
                   ></path>
                 </svg>
               </a>
-              <div class="nav-dropdown-menu" role="menu">
-                <span class="nav-dropdown-label">App Policies</span>
+
+              <div
+                class="nav-dropdown-menu"
+                id="policies-menu"
+                role="menu"
+                aria-labelledby="policies-trigger"
+              >
+                <span class="nav-dropdown-label">Select App Policy</span>
                 <a
                   href="#noteapt-privacy"
+                  data-policy="noteapt"
                   class="nav-dropdown-item"
                   role="menuitem"
                 >
                   <span class="item-icon">N</span>
                   <span class="item-text">
                     <span class="item-name">NoteApt</span>
-                    <span class="item-subtitle">Privacy Policy</span>
+                    <span class="item-subtitle">Android · Privacy Policy</span>
                   </span>
                 </a>
                 <!--
-                Future app dropdown item template:
-                <a href="#app-slug-privacy" class="nav-dropdown-item" role="menuitem">
-                  <span class="item-icon">A</span>
+                Future app dropdown item example (e.g. Music Player):
+                <a
+                  href="#music-player-privacy"
+                  data-policy="music-player"
+                  class="nav-dropdown-item"
+                  role="menuitem"
+                >
+                  <span class="item-icon">M</span>
                   <span class="item-text">
-                    <span class="item-name">App Name</span>
-                    <span class="item-subtitle">Privacy Policy</span>
+                    <span class="item-name">Music Player</span>
+                    <span class="item-subtitle">Android & iOS · Privacy Policy</span>
                   </span>
                 </a>
                 -->
               </div>
             </li>
+
             <li>
               <a href="#contact" data-tab="contact">Contact</a>
             </li>
@@ -194,12 +213,12 @@
               Privacy-First Indie Studio
             </span>
             <h1 id="home-heading">
-              Simple, private Android apps for
+              Simple, private apps for
               <span class="text-gradient">everyday life.</span>
             </h1>
             <p class="tagline">
-              Thoughtfully crafted tools with local-first storage, optional
-              personal cloud backup, and transparent privacy policies.
+              Android &amp; iOS apps built with local-first storage, optional
+              personal cloud backup, and clear privacy policies for every app.
             </p>
             <div class="hero-actions">
               <a href="#apps" class="btn btn-primary">
@@ -219,8 +238,8 @@
                   />
                 </svg>
               </a>
-              <a href="#policies" class="btn btn-outline"
-                >Read Privacy Policies</a
+              <a href="#noteapt-privacy" class="btn btn-outline"
+                >NoteApt Privacy Policy</a
               >
             </div>
           </div>
@@ -286,8 +305,8 @@
               </div>
               <h3>You Own Your Backups</h3>
               <p>
-                Sync seamlessly to your own Google Drive folder or export local
-                backups anytime.
+                Sync to your own Google Drive folder or export local backups
+                anytime.
               </p>
             </div>
           </div>
@@ -295,14 +314,18 @@
       </section>
 
       <!-- APPS -->
-      <section id="panel-apps" class="panel" aria-labelledby="apps-heading">
+      <section
+        id="panel-apps"
+        class="panel"
+        hidden
+        aria-labelledby="apps-heading"
+      >
         <div class="section-wrap">
           <header class="section-header">
             <span class="section-eyebrow">Portfolio</span>
-            <h2 id="apps-heading">Published & Upcoming Apps</h2>
+            <h2 id="apps-heading">Android &amp; iOS Apps</h2>
             <p class="apps-intro">
-              Lightweight Android utilities built with privacy and speed in
-              mind.
+              Lightweight apps built with privacy and speed in mind.
             </p>
           </header>
 
@@ -347,7 +370,7 @@
                   >
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
-                  <span>Google Drive sync & local backups</span>
+                  <span>Google Drive sync &amp; local backups</span>
                 </li>
                 <li>
                   <svg
@@ -360,7 +383,7 @@
                   >
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
-                  <span>AES encrypted PIN & biometric lock</span>
+                  <span>AES encrypted PIN &amp; biometric lock</span>
                 </li>
                 <li>
                   <svg
@@ -373,7 +396,7 @@
                   >
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
-                  <span>Voice typing & read-aloud</span>
+                  <span>Voice typing &amp; read-aloud</span>
                 </li>
                 <li>
                   <svg
@@ -386,7 +409,7 @@
                   >
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
-                  <span>Reminders & rich media attachments</span>
+                  <span>Reminders &amp; rich media attachments</span>
                 </li>
               </ul>
 
@@ -398,10 +421,27 @@
                 >
               </div>
             </article>
+
             <!--
-            To add a future app, copy the <article class="app-card"> block above, then:
-            - update the icon, title, description, feature list, and links
-            - link the "Privacy Policy" button to #<slug>-privacy
+            Future app card template (Android / iOS):
+            <article class="app-card">
+              <div class="app-card-top">
+                <div class="app-icon-badge" aria-hidden="true">M</div>
+                <span class="app-status-tag">Android & iOS</span>
+              </div>
+              <h3>Music Player</h3>
+              <p class="app-desc">Offline audio player with folders, playlists, and sleep timer.</p>
+              <ul class="features">
+                <li>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Local music library playback</span>
+                </li>
+              </ul>
+              <div class="card-actions">
+                <a href="#" class="btn btn-primary">Download</a>
+                <a href="#music-player-privacy" class="btn btn-outline">Privacy Policy</a>
+              </div>
+            </article>
             -->
           </div>
         </div>
@@ -411,31 +451,43 @@
       <section
         id="panel-policies"
         class="panel"
+        hidden
         aria-labelledby="policies-heading"
       >
         <div class="section-wrap">
           <header class="section-header">
-            <span class="section-eyebrow">Legal & Transparency</span>
-            <h2 id="policies-heading">Privacy Policies</h2>
+            <span class="section-eyebrow">Legal &amp; Transparency</span>
+            <h2 id="policies-heading">App Privacy Policies</h2>
             <p class="apps-intro">
-              Select an application below to read its complete data handling
-              practices.
+              Each app has its own dedicated privacy policy. Switch apps using
+              the selector below or the Policies menu.
             </p>
 
-            <!-- Quick App Switcher Pills (useful as you add more apps) -->
+            <!-- App Policy Switcher -->
             <div
               class="policy-switcher"
               role="navigation"
               aria-label="App policy selector"
             >
-              <a href="#noteapt-privacy" class="policy-pill active">NoteApt</a>
-              <!-- Future app pill example: <a href="#musicplayer-privacy" class="policy-pill">Music Player</a> -->
+              <a
+                href="#noteapt-privacy"
+                data-policy="noteapt"
+                class="policy-pill active"
+                >NoteApt</a
+              >
+              <!-- Future app pill: <a href="#music-player-privacy" data-policy="music-player" class="policy-pill">Music Player</a> -->
             </div>
           </header>
 
-          <article id="noteapt-privacy" class="policy-document">
+          <!-- NOTEAPT POLICY -->
+          <article
+            id="noteapt-privacy"
+            data-policy-section="noteapt"
+            class="policy-document"
+          >
             <div class="policy-doc-header">
               <div class="policy-meta-badges">
+                <span class="badge-pill">Platform: Android</span>
                 <span class="badge-pill">Effective: November 24, 2026</span>
                 <span class="badge-pill">Developer: LotOfApps</span>
               </div>
@@ -636,10 +688,16 @@
               <a href="mailto:lotofapps@gmail.com">lotofapps@gmail.com</a>.
             </p>
           </article>
+
           <!--
-          To add a future app policy section, add an <article id="<slug>-privacy" class="policy-document">
-          below this block, register its anchor in script.js ROUTES map, and add a matching dropdown item
-          in the header navigation and policy-switcher above.
+          Future app policy template (e.g. Music Player):
+          <article
+            id="music-player-privacy"
+            data-policy-section="music-player"
+            class="policy-document"
+          >
+            ...
+          </article>
           -->
         </div>
       </section>
@@ -648,11 +706,12 @@
       <section
         id="panel-contact"
         class="panel"
+        hidden
         aria-labelledby="contact-heading"
       >
         <div class="section-wrap">
           <header class="section-header">
-            <span class="section-eyebrow">Support & Feedback</span>
+            <span class="section-eyebrow">Support &amp; Feedback</span>
             <h2 id="contact-heading">Get in Touch</h2>
             <p class="apps-intro">
               Have a question, bug report, or privacy inquiry? Reach out
@@ -718,18 +777,27 @@
       <div class="footer-inner">
         <div class="footer-brand">
           <strong>LotOfApps</strong>
-          <span>· Privacy-friendly Android apps</span>
+          <span>· Privacy-friendly Android &amp; iOS apps</span>
         </div>
         <ul class="footer-links">
           <li><a href="#home">Home</a></li>
           <li><a href="#apps">Apps</a></li>
-          <li><a href="#policies">Policies</a></li>
+          <li><a href="#noteapt-privacy">NoteApt Policy</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
         <p class="footer-copy">© 2026 LotOfApps. All rights reserved.</p>
       </div>
     </footer>
 
+    <script>
+      if (window.location.hash === '#policies') {
+        history.replaceState(
+          null,
+          '',
+          window.location.pathname + window.location.search,
+        );
+      }
+    </script>
     <script src="script.js"></script>
   </body>
 </html>
