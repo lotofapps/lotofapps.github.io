@@ -15,19 +15,12 @@
 (function () {
   'use strict';
 
-  // Tab identifiers; keys match `data-tab` on nav links and panel ids (`panel-<id>`)
   var TABS = ['home', 'apps', 'policies', 'contact'];
 
-  // Hash-to-route map.
-  // Each entry: { tab, policy, normalize }
-  //   tab      : which tab to activate (always 'policies' for policy hashes)
-  //   policy   : app slug whose policy section to show (matches data-policy / id)
-  //   normalize: null so #noteapt and #musicplayer stay in the URL hash
   var ROUTES = {
     policies: { tab: 'policies', policy: 'noteapt', normalize: null },
     noteapt: { tab: 'policies', policy: 'noteapt', normalize: null },
     musicplayer: { tab: 'policies', policy: 'musicplayer', normalize: null },
-    // Backward-compatible aliases without forcing #policies
     'noteapt-privacy': { tab: 'policies', policy: 'noteapt', normalize: null },
     'music-player-privacy': {
       tab: 'policies',
@@ -42,6 +35,7 @@
   var navToggle = doc.getElementById('nav-toggle');
   var siteNav = doc.getElementById('site-nav');
   var themeToggle = doc.getElementById('theme-toggle');
+  var policiesTrigger = doc.getElementById('policies-trigger');
 
   /* ---------- theme ---------- */
   var THEME_KEY = 'lotofapps_theme';
@@ -118,7 +112,6 @@
       }
     });
 
-    // Fallback to first policy section if slug is not in DOM yet
     if (!targetSection && sections.length > 0) {
       sections[0].hidden = false;
       targetSection = sections[0];
@@ -199,8 +192,20 @@
     activateTab('home');
   }
 
-  /* ---------- anchor delegation (in-page links) ---------- */
+  /* ---------- anchor delegation & hover-only Policies trigger ---------- */
+  if (policiesTrigger) {
+    policiesTrigger.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  }
+
   doc.addEventListener('click', function (e) {
+    if (e.target.closest('#policies-trigger')) {
+      e.preventDefault();
+      return;
+    }
+
     var link = e.target.closest('a[href^="#"]');
     if (!link) {
       return;
@@ -210,7 +215,6 @@
     var hash = href.slice(1);
 
     if (hash === '') {
-      // Placeholder link (e.g. Google Play / Download before a real URL is added)
       e.preventDefault();
       return;
     }
@@ -220,6 +224,12 @@
       e.preventDefault();
       setHash(hash);
       activateTab(route.tab, route.policy);
+      if (
+        link.classList.contains('nav-dropdown-item') &&
+        typeof link.blur === 'function'
+      ) {
+        link.blur();
+      }
       return;
     }
 
