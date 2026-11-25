@@ -87,6 +87,10 @@
   display: none !important;
 }
 
+.panel {
+  scroll-margin-top: var(--policy-scroll-margin);
+}
+
 html {
   scroll-behavior: smooth;
 }

@@ -1,33 +1,21 @@
 /* ==========================================================================
    LotOfApps — vanilla JavaScript
-   - Client-side tab switching via the `hidden` attribute
+   - Single-page scroll navigation: all panels/policies always visible
    - Hash-based deep linking:
-       #home        -> Home tab
-       #apps        -> Apps tab
-       #policies    -> Policies tab (shows default/first policy)
-       #noteapt     -> Policies tab, show NoteApt policy (keeps #noteapt in URL)
-       #musicplayer -> Policies tab, show Music Player policy (keeps #musicplayer in URL)
-       #contact     -> Contact tab
+        #home             -> Home panel
+        #apps             -> Apps panel
+        #policies         -> Policies panel
+        #noteapt          -> NoteApt privacy policy article
+        #musicplayer      -> Music Player privacy policy article
+        #noteapt-privacy  -> alias for NoteApt policy
+        #music-player-privacy -> alias for Music Player policy
+        #contact          -> Contact panel
    - Theme toggle persisted in localStorage
    - Accessible mobile hamburger menu
    ========================================================================== */
 
 (function () {
   'use strict';
-
-  var TABS = ['home', 'apps', 'policies', 'contact'];
-
-  var ROUTES = {
-    policies: { tab: 'policies', policy: 'noteapt', normalize: null },
-    noteapt: { tab: 'policies', policy: 'noteapt', normalize: null },
-    musicplayer: { tab: 'policies', policy: 'musicplayer', normalize: null },
-    'noteapt-privacy': { tab: 'policies', policy: 'noteapt', normalize: null },
-    'music-player-privacy': {
-      tab: 'policies',
-      policy: 'musicplayer',
-      normalize: null,
-    },
-  };
 
   var doc = document;
   var htmlEl = doc.documentElement;
@@ -77,7 +65,7 @@
     });
   }
 
-  /* ---------- policy selection & tabs ---------- */
+  /* ---------- policy active states ---------- */
   function syncPolicyActiveStates(policySlug) {
     doc
       .querySelectorAll('.nav-dropdown-item[data-policy]')
@@ -99,28 +87,79 @@
     });
   }
 
-  function showPolicySection(policySlug) {
-    var sections = doc.querySelectorAll('.policy-document');
-    var targetSection = null;
+  /* ---------- scroll navigation ---------- */
+  var SCROLL_MAP = {
+    home: { selector: '#panel-home', tab: 'home', policy: '' },
+    apps: { selector: '#panel-apps', tab: 'apps', policy: '' },
+    policies: { selector: '#panel-policies', tab: 'policies', policy: '' },
+    contact: { selector: '#panel-contact', tab: 'contact', policy: '' },
+    noteapt: { selector: '#noteapt', tab: 'policies', policy: 'noteapt' },
+    musicplayer: {
+      selector: '#musicplayer',
+      tab: 'policies',
+      policy: 'musicplayer',
+    },
+    'noteapt-privacy': {
+      selector: '#noteapt',
+      tab: 'policies',
+      policy: 'noteapt',
+    },
+    'music-player-privacy': {
+      selector: '#musicplayer',
+      tab: 'policies',
+      policy: 'musicplayer',
+    },
+  };
 
-    sections.forEach(function (sec) {
-      var slug = sec.getAttribute('data-policy-section') || sec.id;
-      var isMatch = slug === policySlug;
-      sec.hidden = !isMatch;
-      if (isMatch) {
-        targetSection = sec;
-      }
-    });
+  var lastScrolledHash = '';
 
-    if (!targetSection && sections.length > 0) {
-      sections[0].hidden = false;
-      targetSection = sections[0];
+  function resolveTarget(hash) {
+    var entry = SCROLL_MAP[hash];
+    if (!entry) {
+      return null;
     }
-
-    syncPolicyActiveStates(policySlug);
-    return targetSection;
+    var el = doc.querySelector(entry.selector);
+    if (!el && entry.policy) {
+      el = doc.querySelector('.policy-document');
+    }
+    return { el: el, tab: entry.tab, policy: entry.policy };
   }
 
+  function setHash(hash) {
+    if (location.hash !== '#' + hash) {
+      location.hash = '#' + hash;
+    }
+  }
+
+  function scrollToTarget(target) {
+    if (!target || !target.el) {
+      return;
+    }
+    if (target.el.id && lastScrolledHash === '#' + target.el.id) {
+      return;
+    }
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    target.el.scrollIntoView({
+      behavior: prefersReduced ? 'auto' : 'smooth',
+      block: 'start',
+    });
+    if (target.el.id) {
+      lastScrolledHash = '#' + target.el.id;
+    }
+  }
+
+  function updateActiveStates(target) {
+    doc.querySelectorAll('.site-nav a[data-tab]').forEach(function (link) {
+      if (link.dataset.tab === target.tab) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+    syncPolicyActiveStates(target.policy);
+  }
+
+  /* ---------- mobile menu ---------- */
   function hideMobileMenu() {
     if (navToggle) {
       navToggle.setAttribute('aria-expanded', 'false');
@@ -130,79 +169,16 @@
     }
   }
 
-  function activateTab(id, policySlug) {
-    if (TABS.indexOf(id) === -1) {
-      id = 'home';
-    }
-
-    doc.querySelectorAll('section.panel').forEach(function (panel) {
-      panel.hidden = panel.id !== 'panel-' + id;
-    });
-
-    doc.querySelectorAll('.site-nav a[data-tab]').forEach(function (link) {
-      if (link.dataset.tab === id) {
-        link.setAttribute('aria-current', 'page');
-      } else {
-        link.removeAttribute('aria-current');
-      }
-    });
-
-    if (id === 'policies') {
-      var activePolicy = policySlug || 'noteapt';
-      var sec = showPolicySection(activePolicy);
-      scrollToElement(sec);
-    } else {
-      syncPolicyActiveStates('');
-    }
-
-    hideMobileMenu();
-  }
-
-  function scrollToElement(el) {
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-
-  /* ---------- hash helpers ---------- */
-  function setHash(hash) {
-    if (location.hash !== '#' + hash) {
-      location.hash = '#' + hash;
-    }
-  }
-
-  function onHashChange() {
-    var hash = location.hash.replace(/^#/, '');
-    var route = ROUTES[hash];
-
-    if (route) {
-      if (route.normalize && location.hash !== '#' + route.normalize) {
-        location.hash = '#' + route.normalize;
-        return;
-      }
-      activateTab(route.tab, route.policy);
-      return;
-    }
-
-    if (TABS.indexOf(hash) !== -1) {
-      activateTab(hash);
-      return;
-    }
-
-    activateTab('home');
-  }
-
-  /* ---------- anchor delegation & hover-only Policies trigger ---------- */
-  if (policiesTrigger) {
-    policiesTrigger.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    });
-  }
-
+  /* ---------- anchor delegation ---------- */
   doc.addEventListener('click', function (e) {
-    if (e.target.closest('#policies-trigger')) {
+    var trigger = e.target.closest('#policies-trigger');
+    if (trigger) {
       e.preventDefault();
+      var target = resolveTarget('policies');
+      setHash('policies');
+      scrollToTarget(target);
+      updateActiveStates(target);
+      hideMobileMenu();
       return;
     }
 
@@ -211,36 +187,49 @@
       return;
     }
 
-    var href = link.getAttribute('href');
+    var href = link.getAttribute('href') || '';
     var hash = href.slice(1);
 
     if (hash === '') {
-      e.preventDefault();
       return;
     }
 
-    var route = ROUTES[hash];
-    if (route) {
-      e.preventDefault();
-      setHash(hash);
-      activateTab(route.tab, route.policy);
-      if (
-        link.classList.contains('nav-dropdown-item') &&
-        typeof link.blur === 'function'
-      ) {
-        link.blur();
-      }
+    var target = resolveTarget(hash);
+    if (!target) {
       return;
     }
 
-    if (TABS.indexOf(hash) !== -1) {
-      e.preventDefault();
-      setHash(hash);
-      activateTab(hash);
+    e.preventDefault();
+    setHash(hash);
+    scrollToTarget(target);
+    updateActiveStates(target);
+    if (
+      link.classList.contains('nav-dropdown-item') &&
+      typeof link.blur === 'function'
+    ) {
+      link.blur();
     }
+    hideMobileMenu();
   });
 
-  /* ---------- mobile menu ---------- */
+  /* ---------- hash handling ---------- */
+  function onHashChange() {
+    var hash = location.hash.replace(/^#/, '');
+    var target = hash ? resolveTarget(hash) : null;
+    if (target) {
+      scrollToTarget(target);
+      updateActiveStates(target);
+      return;
+    }
+    // Empty or unknown hash: stay at top, Home highlighted
+    updateActiveStates({
+      el: doc.querySelector('#panel-home'),
+      tab: 'home',
+      policy: '',
+    });
+  }
+
+  /* ---------- mobile menu toggle ---------- */
   if (navToggle && siteNav) {
     navToggle.addEventListener('click', function () {
       var open = navToggle.getAttribute('aria-expanded') === 'true';

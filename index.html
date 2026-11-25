@@ -315,7 +315,6 @@
       <section
         id="panel-apps"
         class="panel"
-        hidden
         aria-labelledby="apps-heading"
       >
         <div class="section-wrap">
@@ -447,7 +446,6 @@
       <section
         id="panel-policies"
         class="panel"
-        hidden
         aria-labelledby="policies-heading"
       >
         <div class="section-wrap">
@@ -702,7 +700,6 @@
       <section
         id="panel-contact"
         class="panel"
-        hidden
         aria-labelledby="contact-heading"
       >
         <div class="section-wrap">
@@ -785,35 +782,7 @@
       </div>
     </footer>
 
-    <script>
-      if (window.location.hash === '#policies') {
-        history.replaceState(
-          null,
-          '',
-          window.location.pathname + window.location.search,
-        );
-      }
 
-      document.addEventListener('DOMContentLoaded', function () {
-        var policyItems = document.querySelectorAll(
-          '.nav-dropdown-item[data-policy]',
-        );
-        function syncActivePolicyItem() {
-          var currentHash = window.location.hash.replace(/^#/, '');
-          policyItems.forEach(function (item) {
-            var isSelected = item.getAttribute('data-policy') === currentHash;
-            item.classList.toggle('is-active', isSelected);
-            if (isSelected) {
-              item.setAttribute('aria-current', 'true');
-            } else {
-              item.removeAttribute('aria-current');
-            }
-          });
-        }
-        syncActivePolicyItem();
-        window.addEventListener('hashchange', syncActivePolicyItem);
-      });
-    </script>
     <script src="script.js"></script>
   </body>
 </html>
